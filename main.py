@@ -6,23 +6,32 @@ import matplotlib.pyplot as plt
 t, y = sympy.symbols("t y")
 
 # Implementação dos métodos numéricos:
-def euler_simples(t0, y0, f, h):
-    return y0 + f(t0, y0)*h
+def euler_simples(ts, ys, f, h, index):
+    t = ts[index]
+    y = ys[index]
+    return y + f(t, y)*h
 
-def euler_inverso(t0, y0, f, h):
-    y1 = euler_simples(t0, y0, f, h)
-    return y0 + f(t0 + h, y1)*h
+def euler_inverso(ts, ys, f, h, index):
+    t = ts[index]
+    y = ys[index]
+    y1 = euler_simples(ts, ys, f, h, index)
+    return y + f(t + h, y1)*h
 
-def euler_composto(t0, y0, f, h):
-    y1 = euler_simples(t0, y0, f, h)
-    return y0 + (f(t0, y0) + f(t0+h, y1))*h/2
+def euler_composto(ts, ys, f, h, index):
+    t = ts[index]
+    y = ys[index]
+    y1 = euler_simples(ts, ys, f, h, index)
+    return y + (f(t, y) + f(t+h, y1))*h/2
 
-def runge_kutta(t0, y0, f, h):
-    k1 = f(t0, y0)
-    k2 = f(t0+(h/2), y0 + (h/2)*k1)
-    k3 = f(t0+(h/2), y0 + (h/2)*k2)
-    k4 = f(t0+h, y0 + h*k3)
-    return y0 + (k1 + 2*k2 + 2*k3 + k4)*h/6
+def runge_kutta(ts, ys, f, h, index):
+    t = ts[index]
+    y = ys[index]
+
+    k1 = f(t, y)
+    k2 = f(t+(h/2), y + (h/2)*k1)
+    k3 = f(t+(h/2), y + (h/2)*k2)
+    k4 = f(t+h, y + h*k3)
+    return y + (k1 + 2*k2 + 2*k3 + k4)*h/6
 
 # O array dos métodos disponíveis:
 metodos = [euler_simples, euler_inverso, euler_composto, runge_kutta]
@@ -33,16 +42,32 @@ def calcular_ate_tf(t0, y0, f, h, tf, metodo):
     y1 = y0
     t1 = t0
     
-    ts = [t1]
-    ys = [y1]
+    ts = todos_ts(t0, tf, h)
+    ys = [0 for _ in ts]
+    ys[0] = y0
+    index = 0
 
-    while t1 < tf:
-        y1 = metodo(t1, y1, f, h)
-        t1 += h
-        ts.append(t1)
-        ys.append(y1)
+    while index < len(ts)-1:
+        ys[index+1] = metodo(ts, ys, f, h, index)
+        index += 1
 
     return (ts, ys)
+
+# Funções estéticas:
+def print_tabela(ts, ys):
+    for (t, y) in zip(ts, ys):
+        print("y(", t, ") = ", y)
+
+def todos_ts(t0, tf, h):
+    ts = [t0]
+    t = t0
+    
+    while t <= tf:
+        t += h
+        ts.append(t)
+
+    return ts
+
 
 # O corpo da função principal
 def main():
@@ -63,10 +88,14 @@ def main():
     for metodo in metodos_requeridos:
         ts, ys = calcular_ate_tf(t0, y0, f, h, tf, metodos[metodo])
         
+        print(nomes[metodo])
+        print_tabela(ts, ys)
+        print()
         plt.plot(ts, ys, label=nomes[metodo])
 
     plt.xlabel("t")
     plt.ylabel("y")
+    plt.legend()
     plt.show()
 
 main()

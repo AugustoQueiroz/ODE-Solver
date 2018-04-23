@@ -11,10 +11,23 @@ A entrada deve ser dada na forma "t0, y0, f, h, tf, metodos", sem as aspas, onde
 * f é a função derivada de y(t)
 * h é o tamanho do passo desejado
 * tf é o valor final que se deseja encontrar
-* metodos é uma lista de índices, separados por espaços, dos métodos numéricos que devem ser usados para encontrar y(tf)
+* metodos é uma lista de índices, separados por espaços, dos métodos numéricos que devem ser usados para encontrar y(tf). Os índices podem ser encontrados na tabela abaixo
+
++---------------------+
+|       Métodos       |
++----+----------------+
+|  0 | Euler Simples  |
+|  1 | Euler Inverso  |
+|  2 | Euler Composto |
+|  3 | Runge-Kutta    |
++----+----------------+
 
 Nota: Para dar valores de ponto flutuante na entrada usar a notação com ponto (.), ao invés de vírgula (,)
 
 ### Exemplo de entrada:
 
 ```0, 1, 2*t+3*y, 0.1, 0.5, 0 1 2 3```
+
+## Especificação da Saída:
+
+O código vai gerar duas saídas, uma tabela com todas os pontos calculados, e um gráfico em que esses pontos são pĺottados.
