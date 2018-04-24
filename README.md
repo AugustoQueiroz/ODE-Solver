@@ -2,6 +2,16 @@
 
 Implementação de alguns métodos numéricos de resolução de equações diferenciais ordinárias.
 
+## Requisitos:
+
+O programa depende de duas bibliotecas de python:
+
+* `matplotlib.pyplot` para a criação e apresentação dos gráficos de cada método
+
+* `sympy` para transformar a expressão de f em uma função de python
+
+Ambas bibliotecas podem ser instaladas com `pip install matplotlib sympy`
+
 ## Especificação da entrada:
 
 A entrada deve ser dada na forma "t0, y0, f, h, tf, metodos", sem as aspas, onde:
@@ -48,3 +58,22 @@ Nota 2: O método de Adams-Bashforth 1 é equivalente ao método de Euler Simple
 ## Especificação da Saída:
 
 O código vai gerar duas saídas, a primeira são os resultados de y(tf) de acordo com cada um dos métodos usados, e a segunda é um gráfico da função encontrada por cada um dos métodos, de t0 até tf.
+
+### Exemplo de Saída:
+
+A entrada `0, 1, cos(t)*y, 0.1, 20, 3 8 13` gera a seguinte saída:
+
+```python
+Runge-Kutta
+y( 20.0 ) = 2.49164881245
+
+Adams-Bashforth 6
+y( 20.0 ) = 2.49165201274
+
+Adams-Moulton 6
+y( 20.0 ) = 2.49164908305
+```
+
+e o gráfico a seguir:
+
+![y' = cos(t)*y](grafico_exemplo.png)
