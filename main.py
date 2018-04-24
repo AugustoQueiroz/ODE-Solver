@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 import sympy
 import matplotlib.pyplot as plt
 
@@ -33,9 +34,82 @@ def runge_kutta(ts, ys, f, h, index):
     k4 = f(t+h, y + h*k3)
     return y + (k1 + 2*k2 + 2*k3 + k4)*h/6
 
+def adams_bashforth2(ts, ys, f, h, index):
+    f0 = f(ts[index], ys[index])
+    f1 = f(ts[index-1], ys[index-1])
+    return ys[index] + (3*f0 - f1)*h/2
+
+def adams_bashforth3(ts, ys, f, h, index):
+    f0 = f(ts[index], ys[index])
+    f1 = f(ts[index-1], ys[index-1])
+    f2 = f(ts[index-2], ys[index-2])
+    print(f0, f1, f2)
+    return ys[index] + (23*f0 - 16*f1 + 5*f2)*h/12
+
+def adams_bashforth4(ts, ys, f, h, index):
+    f0 = f(ts[index], ys[index])
+    f1 = f(ts[index-1], ys[index-1])
+    f2 = f(ts[index-2], ys[index-2])
+    f3 = f(ts[index-3], ys[index-3])
+    return ys[index] + (55*f0-59*f1+37*f2-3*f3)*h/24
+
+def adams_bashforth5(ts, ys, f, h, index):
+    f0 = f(ts[index], ys[index])
+    f1 = f(ts[index-1], ys[index-1])
+    f2 = f(ts[index-2], ys[index-2])
+    f3 = f(ts[index-3], ys[index-3])
+    f4 = f(ts[index-4], ys[index-4])
+    return ys[index] + (1901*f0 - 2774*f1 + 2616*f2 - 1274*f3 + 251*f4)*h/720
+
+def adams_bashforth6(ts, ys, f, h, index):
+    f0 = f(ts[index], ys[index])
+    f1 = f(ts[index-1], ys[index-1])
+    f2 = f(ts[index-2], ys[index-2])
+    f3 = f(ts[index-3], ys[index-3])
+    f4 = f(ts[index-4], ys[index-4])
+    f5 = f(ts[index-5], ys[index-5])
+    return ys[index] + (4277*f0-3*2641*f1+2*4991*f2-2*3649*f3+3*959*f4-5*95*f5)*h/1440
+
+def adams_moulton2(ts, ys, f, h, index):
+    pass
+
+def adams_moulton3(ts, ys, f, h, index):
+    y1 = runge_kutta(ts, ys, f, h, index)
+    f0 = f(ts[index+1], y1)
+    f1 = f(ts[index], ys[index])
+    f2 = f(ts[index-1], ys[index-1])
+    return ys[index] + (5*f0+8*f1-f2)*h/12
+
+def adams_moulton4(ts, ys, f, h, index):
+    y1 = runge_kutta(ts, ys, f, h, index)
+    f0 = f(ts[index+1], y1)
+    f1 = f(ts[index], ys[index])
+    f2 = f(ts[index-1], ys[index-1])
+    f3 = f(ts[index-2], ys[index-2])
+    return ys[index] + (9*f0+19*f1-5*f2+f3)*h/24
+
+def adams_moulton5(ts, ys, f, h, index):
+    y1 = runge_kutta(ts, ys, f, h, index)
+    f0 = f(ts[index+1], y1)
+    f1 = f(ts[index], ys[index])
+    f2 = f(ts[index-1], ys[index-1])
+    f3 = f(ts[index-2], ys[index-2])
+    f4 = f(ts[index-3], ys[index-3])
+    return ys[index] + (251*f0+2*323*f1-24*11*f2+2*53*f3-19*f4)*h/720
+
+def adams_moulton6(ts, ys, f, h, index):
+    y1 = runge_kutta(ts, ys, f, h, index)
+    f0 = f(ts[index+1], y1)
+    f1 = f(ts[index], ys[index])
+    f2 = f(ts[index-1], ys[index-1])
+    f3 = f(ts[index-2], ys[index-2])
+    f4 = f(ts[index-3], ys[index-3])
+    f5 = f(ts[index-4], ys[index-4])
+    return ys[index] + (5*95*f0+1427*f1-6*133*f2+2*241*f3-173*f4+9*3*f5)*h/1440
+    
 # O array dos métodos disponíveis:
-metodos = [euler_simples, euler_inverso, euler_composto, runge_kutta]
-nomes = ["Euler Simples", "Euler Inverso", "Euler Composto", "Runge-Kutta"]
+metodos = [euler_simples, euler_inverso, euler_composto, runge_kutta, adams_bashforth2, adams_bashforth3, adams_bashforth4, adams_bashforth5, adams_bashforth6, adams_moulton2, adams_moulton3, adams_moulton4, adams_moulton5, adams_moulton6]
+nomes = ["Euler Simples", "Euler Inverso", "Euler Composto", "Runge-Kutta", "Adams-Bashforth 2", "Adams-Bashforth 3", "Adams-Bashforth 4", "Adams-Bashforth 5", "Adams-Bashforth 6", "Adams-Moulton 2", "Adams-Moulton 3", "Adams-Moulton 4", "Adams-Moulton 5", "Adams-Moulton 6"]
 
 # A função que encontra um dado tf a partir de um PVI e um método escolhido
 def calcular_ate_tf(t0, y0, f, h, tf, metodo):
@@ -47,6 +121,27 @@ def calcular_ate_tf(t0, y0, f, h, tf, metodo):
     ys[0] = y0
     index = 0
 
+    index_metodo = metodos.index(metodo)
+
+    if (index_metodo >= 4 and index_metodo < 9) or (index_metodo >= 9):
+        ys[index+1] = runge_kutta(ts, ys, f, h, index)
+        index += 1
+    if (index_metodo >= 5 and index_metodo < 9) or (index_metodo >= 10):
+        ys[index+1] = runge_kutta(ts, ys, f, h, index)
+        index += 1
+    if (index_metodo >= 6 and index_metodo < 9) or (index_metodo >= 11):
+        ys[index+1] = runge_kutta(ts, ys, f, h, index)
+        index += 1
+    if (index_metodo >= 7 and index_metodo < 9) or (index_metodo >= 12):
+        ys[index+1] = runge_kutta(ts, ys, f, h, index)
+        index += 1
+    if (index_metodo >= 8 and index_metodo < 9) or (index_metodo >= 13):
+        ys[index+1] = runge_kutta(ts, ys, f, h, index)
+        index += 1
+
+    if index_metodo >= 9:
+        index -= 1
+
     while index < len(ts)-1:
         ys[index+1] = metodo(ts, ys, f, h, index)
         index += 1
@@ -54,9 +149,8 @@ def calcular_ate_tf(t0, y0, f, h, tf, metodo):
     return (ts, ys)
 
 # Funções estéticas:
-def print_tabela(ts, ys):
-    for (t, y) in zip(ts, ys):
-        print("y(", t, ") = ", y)
+def print_solucao(ts, ys):
+    print "y(", ts[len(ts)-1], ") = ", ys[len(ys)-1]
 
 def todos_ts(t0, tf, h):
     ts = [t0]
@@ -85,14 +179,18 @@ def main():
     f_expr = sympy.sympify(f_text)
     f = sympy.lambdify([t, y], f_expr, "math")
 
-    for metodo in metodos_requeridos:
+    plt.title("y' = " + f_text)
+    for (i, metodo) in enumerate(metodos_requeridos):
         ts, ys = calcular_ate_tf(t0, y0, f, h, tf, metodos[metodo])
         
         print(nomes[metodo])
-        print_tabela(ts, ys)
-        print()
+        print_solucao(ts, ys)
+        print
+        
         plt.plot(ts, ys, label=nomes[metodo])
 
+
+    plt.title("y' = " + f_text)
     plt.xlabel("t")
     plt.ylabel("y")
     plt.legend()
