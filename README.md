@@ -14,7 +14,7 @@ Ambas bibliotecas podem ser instaladas com `pip install matplotlib sympy`
 
 ## Especificação da entrada:
 
-A entrada deve ser dada na forma "t0, y0, f, h, tf, metodos", sem as aspas, onde:
+A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, onde:
 
 * t0 é o valor de t do ponto incial
 
