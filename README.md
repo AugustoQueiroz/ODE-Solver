@@ -20,7 +20,7 @@ A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, on
 
 * y0 é o valor de y do ponto inicial
 
-* f é a função derivada de y(t)
+* f é a função derivada de y(t) que deve ser dada na formatação de expressão da biblioteca math, ou seja, t² é escrito `t**2`
 
 * h é o tamanho do passo desejado
 
