@@ -70,7 +70,7 @@ def adams_bashforth6(ts, ys, f, h, index):
     return ys[index] + (4277*f0-3*2641*f1+2*4991*f2-2*3649*f3+3*959*f4-5*95*f5)*h/1440
 
 def adams_moulton2(ts, ys, f, h, index):
-    pass
+    return euler_composto(ts, ys, f, h, index)
 
 def adams_moulton3(ts, ys, f, h, index):
     y1 = runge_kutta(ts, ys, f, h, index)
