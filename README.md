@@ -63,7 +63,7 @@ O código vai gerar duas saídas, a primeira são os resultados de y(tf) de acor
 
 A entrada `0, 1, cos(t)*y, 0.1, 20, 3 8 13` gera a seguinte saída:
 
-```python
+```
 Runge-Kutta
 y( 20.0 ) = 2.49164881245
 
