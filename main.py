@@ -43,7 +43,6 @@ def adams_bashforth3(ts, ys, f, h, index):
     f0 = f(ts[index], ys[index])
     f1 = f(ts[index-1], ys[index-1])
     f2 = f(ts[index-2], ys[index-2])
-    print(f0, f1, f2)
     return ys[index] + (23*f0 - 16*f1 + 5*f2)*h/12
 
 def adams_bashforth4(ts, ys, f, h, index):
