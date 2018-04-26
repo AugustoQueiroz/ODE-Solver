@@ -12,6 +12,8 @@ O programa depende de duas bibliotecas de python:
 
 Ambas bibliotecas podem ser instaladas com `pip install matplotlib sympy`
 
+Nota: A biblioteca matplotlib requer a instalação do pacote de GUI Tk. [Guia de Instalação do Tk](http://www.tkdocs.com/tutorial/install.html)
+
 ## Especificação da entrada:
 
 A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, onde:
