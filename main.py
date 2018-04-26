@@ -105,13 +105,60 @@ def adams_moulton6(ts, ys, f, h, index):
     f4 = f(ts[index-3], ys[index-3])
     f5 = f(ts[index-4], ys[index-4])
     return ys[index] + (5*95*f0+1427*f1-6*133*f2+2*241*f3-173*f4+9*3*f5)*h/1440
+
+def euler_inverso_i(ts, ys, f_expr, h, index):
+    y1 = sympy.Symbol("y1")
+    f_expr = f_expr.subs(t, ts[index+1]).subs(y, y1)
+    return sympy.solve(sympy.Eq(ys[index] + f_expr*h, y1), y1).pop()
+
+def euler_composto_i(ts, ys, f_expr, h, index):
+    y1 = sympy.Symbol("y1")
+    f_expr += f_expr.subs(t, ts[index]).subs(y, ys[index])
+    f_expr = f_expr.subs(t, ts[index+1]).subs(y, y1)
+    return sympy.solve(sympy.Eq(ys[index] + f_expr*h/2, y1), y1).pop()
+
+def adams_moulton3_i(ts, ys, f_expr, h, index):
+    y1 = sympy.Symbol("y1")
+    f_expr_1 = f_expr.subs(t, ts[index]).subs(y, ys[index])
+    f_expr_2 = f_expr.subs(t, ts[index-1]).subs(y, ys[index-1])
+    f_expr = f_expr.subs(t, ts[index+1]).subs(y, y1)
+    return sympy.solve(sympy.Eq(ys[index] + (5*f_expr+8*f_expr_1-f_expr_2)*h/12, y1), y1).pop() 
+
+def adams_moulton4_i(ts, ys, f_expr, h, index):
+    y1 = sympy.Symbol("y1")
+    f_expr_0 = f_expr.subs(t, ts[index+1]).subs(y, y1)
+    f_expr_1 = f_expr.subs(t, ts[index]).subs(y, ys[index])
+    f_expr_2 = f_expr.subs(t, ts[index-1]).subs(y, ys[index-1])
+    f_expr_3 = f_expr.subs(t, ts[index-2]).subs(y, ys[index-2])
+    return sympy.solve(sympy.Eq(ys[index] + (9*f_expr_0+19*f_expr_1-5*f_expr_2+f_expr_3)*h/24, y1), y1).pop()
+
+def adams_moulton5_i(ts, ys, f_expr, h, index):
+    y1 = sympy.Symbol("y1")
+    f_expr_0 = f_expr.subs(t, ts[index+1]).subs(y, y1)
+    f_expr_1 = f_expr.subs(t, ts[index]).subs(y, ys[index])
+    f_expr_2 = f_expr.subs(t, ts[index-1]).subs(y, ys[index-1])
+    f_expr_3 = f_expr.subs(t, ts[index-2]).subs(y, ys[index-2])
+    f_expr_4 = f_expr.subs(t, ts[index-3]).subs(y, ys[index-3])
+    return sympy.solve(sympy.Eq(ys[index] + (251*f_expr_0+2*323*f_expr_1-24*11*f_expr_2+2*53*f_expr_3-19*f_expr_4)*h/720, y1), y1).pop()
+
+def adams_moulton6_i(ts, ys, f_expr, h, index):
+    y1 = sympy.Symbol("y1")
+    f_expr_0 = f_expr.subs(t, ts[index+1]).subs(y, y1)
+    f_expr_1 = f_expr.subs(t, ts[index]).subs(y, ys[index])
+    f_expr_2 = f_expr.subs(t, ts[index-1]).subs(y, ys[index-1])
+    f_expr_3 = f_expr.subs(t, ts[index-2]).subs(y, ys[index-2])
+    f_expr_4 = f_expr.subs(t, ts[index-3]).subs(y, ys[index-3])
+    f_expr_5 = f_expr.subs(t, ts[index-4]).subs(y, ys[index-4])
+    return sympy.solve(sympy.Eq(ys[index] + (5*95*f_expr_0+1427*f_expr_1-6*133*f_expr_2+2*241*f_expr_3-173*f_expr_4+9*3*f_expr_5)*h/1440, y1), y1).pop()
     
 # O array dos métodos disponíveis:
-metodos = [euler_simples, euler_inverso, euler_composto, runge_kutta, adams_bashforth2, adams_bashforth3, adams_bashforth4, adams_bashforth5, adams_bashforth6, adams_moulton2, adams_moulton3, adams_moulton4, adams_moulton5, adams_moulton6]
-nomes = ["Euler Simples", "Euler Inverso", "Euler Composto", "Runge-Kutta", "Adams-Bashforth 2", "Adams-Bashforth 3", "Adams-Bashforth 4", "Adams-Bashforth 5", "Adams-Bashforth 6", "Adams-Moulton 2", "Adams-Moulton 3", "Adams-Moulton 4", "Adams-Moulton 5", "Adams-Moulton 6"]
+metodos = [euler_simples, euler_inverso, euler_composto, runge_kutta, adams_bashforth2, adams_bashforth3, adams_bashforth4, adams_bashforth5, adams_bashforth6, adams_moulton2, adams_moulton3, adams_moulton4, adams_moulton5, adams_moulton6, euler_inverso_i, euler_composto_i, adams_moulton3_i, adams_moulton4_i, adams_moulton5_i, adams_moulton6_i]
+nomes = ["Euler Simples", "Euler Inverso", "Euler Composto", "Runge-Kutta", "Adams-Bashforth 2", "Adams-Bashforth 3", "Adams-Bashforth 4", "Adams-Bashforth 5", "Adams-Bashforth 6", "Adams-Moulton 2", "Adams-Moulton 3", "Adams-Moulton 4", "Adams-Moulton 5", "Adams-Moulton 6", "Euler Inverso [Implicito]", "Euler Composto [Implicito]", "Adams-Moulton 3 [Implicito]", "Adams-Moulton 4 [Implicito]", "Adams-Moulton 5 [Implicito]", "Adams-Moulton 6 [Implicito]"]
 
 # A função que encontra um dado tf a partir de um PVI e um método escolhido
-def calcular_ate_tf(t0, y0, f, h, tf, metodo):
+def calcular_ate_tf(t0, y0, f_expr, h, tf, metodo):
+    f = sympy.lambdify([t, y], f_expr, "math")
+
     y1 = y0
     t1 = t0
     
@@ -142,7 +189,9 @@ def calcular_ate_tf(t0, y0, f, h, tf, metodo):
         index -= 1
 
     while index < len(ts)-1:
-        ys[index+1] = metodo(ts, ys, f, h, index)
+        if index_metodo <= 13: ys[index+1] = metodo(ts, ys, f, h, index)
+        else: ys[index+1] = metodo(ts, ys, f_expr, h, index)
+
         index += 1
 
     return (ts, ys)
@@ -161,6 +210,13 @@ def todos_ts(t0, tf, h):
 
     return ts
 
+def calcular_pontos_solucao(ts, s):
+    ys = []
+
+    for t in ts:
+        ys.append(s(t))
+
+    return ys
 
 # O corpo da função principal
 def main():
@@ -176,11 +232,10 @@ def main():
 
     # Converter a função para uma expressão de sympy, e daí pra uma função
     f_expr = sympy.sympify(f_text)
-    f = sympy.lambdify([t, y], f_expr, "math")
 
     plt.title("y' = " + f_text)
     for (i, metodo) in enumerate(metodos_requeridos):
-        ts, ys = calcular_ate_tf(t0, y0, f, h, tf, metodos[metodo])
+        ts, ys = calcular_ate_tf(t0, y0, f_expr, h, tf, metodos[metodo])
         
         print(nomes[metodo])
         print_solucao(ts, ys)
