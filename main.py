@@ -198,7 +198,7 @@ def calcular_ate_tf(t0, y0, f_expr, h, tf, metodo):
 
 # Funções estéticas:
 def print_solucao(ts, ys):
-    print "y(", ts[len(ts)-1], ") =", ys[len(ys)-1]
+    print "y(", ts[len(ts)-2], ") =", ys[len(ys)-2]
 
 def todos_ts(t0, tf, h):
     ts = [t0]
