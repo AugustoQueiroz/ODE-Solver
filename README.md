@@ -10,7 +10,7 @@ O programa depende de duas bibliotecas de python:
 
 * `sympy` para transformar a expressão de f em uma função de python
 
-Ambas bibliotecas podem ser instaladas com `pip install matplotlib sympy`
+Ambas bibliotecas podem ser instaladas com `sudo pip install matplotlib sympy`
 
 Nota: A biblioteca matplotlib requer a instalação do pacote de GUI Tk. [Guia de Instalação do Tk](http://www.tkdocs.com/tutorial/install.html)
 
@@ -53,9 +53,9 @@ A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, on
 | 18     | Adams-Moulton 5 [Implícito] |
 | 19     | Adams-Moulton 6 [Implícito] |
 
-Nota: Para dar valores de ponto flutuante na entrada usar a notação com ponto (.), ao invés de vírgula (,)
+_Nota:_ Para dar valores de ponto flutuante na entrada usar a notação com ponto (.), ao invés de vírgula (,)
 
-Nota 2: O método de Adams-Bashforth 1 é equivalente ao método de Euler Simples; o método de Adams-Moulton 1 é equivalente ao método de Euler Inverso; o método de Adams-Moulton 2 é equivalente ao método de Euler Composto.
+_Nota 2:_ O método de Adams-Bashforth 1 é equivalente ao método de Euler Simples; o método de Adams-Moulton 1 é equivalente ao método de Euler Inverso; o método de Adams-Moulton 2 é equivalente ao método de Euler Composto.
 
 ### Exemplo de entrada:
 
