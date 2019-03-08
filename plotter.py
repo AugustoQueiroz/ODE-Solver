@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 class Plotter:
     def print(self, method_name, results, should_print_all):
+        print()
         print(method_name)
 
         if should_print_all:

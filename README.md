@@ -12,7 +12,7 @@ O programa depende de duas bibliotecas de python:
 
 Ambas bibliotecas podem ser instaladas com `sudo pip install matplotlib sympy`
 
-Nota: A biblioteca matplotlib requer a instalação do pacote de GUI Tk. [Guia de Instalação do Tk](http://www.tkdocs.com/tutorial/install.html)
+_Nota:_ A biblioteca matplotlib requer a instalação do pacote de GUI Tk. [Guia de Instalação do Tk](http://www.tkdocs.com/tutorial/install.html)
 
 ## Especificação da entrada:
 
@@ -22,7 +22,7 @@ A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, on
 
 * `y0` é o valor de y do ponto inicial
 
-* `f` é a função derivada de y(t) que deve ser dada na formatação de expressão da biblioteca math, ou seja, t² é escrito `t**2`
+* `f` é a função derivada de y(t) que deve ser dada na formatação de expressão da biblioteca `math`, ou seja, t² é escrito `t**2`
 
 * `h` é o tamanho do passo desejado
 
@@ -59,9 +59,13 @@ _Nota 2:_ O método de Adams-Bashforth 1 é equivalente ao método de Euler Simp
 
 ### Exemplo de entrada:
 
-```0, 1, 2*t+3*y, 0.1, 0.5, 0 1 2 3```
+```
+0, 1, 2*t+3*y, 0.1, 0.5, 0 1 2 3
+```
 
-```0, 1, cos(t)*y, 5, 20, 3 8 12```
+```
+0, 1, cos(t)*y, 5, 20, 3 8 12
+```
 
 ## Especificação da Saída:
 
