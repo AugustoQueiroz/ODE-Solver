@@ -7,6 +7,8 @@ from functools import partial
 
 class Problem:
     def __init__(self, problem):
+        self.methods = methods.Methods()
+
         # Information about the method
         self.method = problem[0]
         self.auxiliary_method = problem[1]
@@ -33,6 +35,20 @@ class Problem:
             t += h
 
         return self.ts
+    
+    def method_function(self):
+        return self.methods[self.method]["function"]
+    
+    def auxiliary_method_function(self):
+        return self.methods[self.auxiliary_method]["function"]
+
+    def method_name(self):
+        name = self.methods[self.method]["name"]
+        if self.method.startswith("adam") or self.method.startswith("formula"):
+            name += " (Ordem = " + str(self.order) + ")"
+        if self.auxiliary_method is not None:
+            name += " por " + self.methods[self.auxiliary_method]["name"]
+        return name
 
     def __str__(self):
         problem_string = "Problem:\n"
@@ -104,23 +120,25 @@ class ODE_Solver:
 
         if problem.auxiliary_method is not None:
             # Use the auxiliary method to calculate the first n points
-            auxiliary_method_function = self.methods[problem.auxiliary_method]["function"]
+            auxiliary_method_function = problem.auxiliary_method_function()
             while index < problem.order:
                 problem.ys[index+1] = auxiliary_method_function(problem.ts, problem.ys, index, f, problem.h)
                 index += 1
 
         index = problem.order-1
-        method = self.methods[problem.method]["function"]
+        method = problem.method_function()
         if problem.method.startswith("adam") or problem.method == "formula_inversa": method = partial(method, problem.order) # If the method needs an order, fill it in
         while index < len(problem.ts)-1:
+            if problem.auxiliary_method is not None:
+                auxiliary_method = problem.auxiliary_method_function()
+                problem.ys[index+1] = auxiliary_method(problem.ts, problem.ys, index, f, problem.h)
             problem.ys[index+1] = method(problem.ts, problem.ys, index, f, problem.h)
             index += 1
 
-        method_name = self.methods[problem.method]["name"] + (" of " + str(problem.order) + " order" if problem.method.startswith("adam") else "")
         if should_print:
-            self.plotter.print(method_name, problem, verbose)
+            self.plotter.print(problem, verbose)
         if should_plot:
-            self.plotter.plot(method_name, problem)
+            self.plotter.plot(problem)
 
         return problem.ys[-1]
 
