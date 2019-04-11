@@ -53,9 +53,13 @@ class Methods:
                     "name": "Adams-Moulton",
                     "function": self.adams_moulton
                     },
-                    {
+                {
                     "name": "Euler Inverso [Implícito]",
                     "function": self.inverse_euler_implicit
+                    },
+                    {
+                    "name": "Euler Composto [Implícito]",
+                    "function": self.composite_euler_implicit
                     }
                 ]
 
@@ -91,6 +95,14 @@ class Methods:
         y = ys[index]
         y1 = self.runge_kutta(ts, ys, index, f, h)
         return y + (f(t, y) + f(t+h, y1))*h/2
+
+    def composite_euler_implicit(self, ts, ys, index, f_expr, h):
+        t, y, y1 = sympy.symbols("t y y1")
+
+        f_expr += f_expr.subs(t, ts[index]).subs(y, ys[index])
+        f_expr = f_expr.subs(t, ts[index+1]).subs(y, y1)
+
+        return sympy.solve(sympy.Eq(ys[index] + f_expr*h/2, y1), y1).pop()
 
     def runge_kutta(self, ts, ys, index, f, h):
         t = ts[index]

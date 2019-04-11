@@ -114,4 +114,4 @@ class ODE_Solver:
 
 # if "__name__" == "__main__":
 solver = ODE_Solver()
-solver.solve("0, 1, cos(t)*y, 0.1, 20, 1 20")
+solver.solve("0, 1, cos(t)*y, 0.1, 20, 2 21")
