@@ -39,7 +39,7 @@ class ODE_Solver:
         ts = []
         t = t0
 
-        while t <= tf:
+        while t < tf + h:
             ts.append(t)
             t += h
 
@@ -105,7 +105,7 @@ class ODE_Solver:
 
         # Para cada t calcular o próximo ponto
         while index < len(ts)-1:
-            if  method_index <= 20: ys[index+1] = metodo(ts, ys, index, f, problem.h)   # Explicit Methods
+            if  method_index < 20: ys[index+1] = metodo(ts, ys, index, f, problem.h)    # Explicit Methods
             else: ys[index+1] = metodo(ts, ys, index, problem.f_expr, problem.h)        # Implicit Methods
 
             index += 1
@@ -114,4 +114,4 @@ class ODE_Solver:
 
 # if "__name__" == "__main__":
 solver = ODE_Solver()
-solver.solve("0, 1, cos(t)*y, 0.1, 20, 2 13")
+solver.solve("0, 1, cos(t)*y, 0.1, 20, 1 20")

@@ -52,6 +52,10 @@ class Methods:
                 {
                     "name": "Adams-Moulton",
                     "function": self.adams_moulton
+                    },
+                    {
+                    "name": "Euler Inverso [Implícito]",
+                    "function": self.inverse_euler_implicit
                     }
                 ]
 
@@ -60,6 +64,8 @@ class Methods:
             key = 4
         elif key >= 12 and key <= 19:
             key = 5
+        elif key >= 20 and key <= 22:
+            key = key - 14
         return self.methods[key]
 
     def euler(self, ts, ys, index, f, h):
@@ -72,6 +78,13 @@ class Methods:
         y = ys[index]
         y1 = self.euler(ts, ys, index, f, h)
         return y + f(t + h, y1)*h
+
+    def inverse_euler_implicit(self, ts, ys, index, f_expr, h):
+        t, y, y1 = sympy.symbols("t y y1")
+
+        f_expr = f_expr.subs(t, ts[index+1]).subs(y, y1)
+
+        return sympy.solve(sympy.Eq(ys[index] + f_expr*h, y1), y1).pop()
 
     def composite_euler(self, ts, ys, index, f, h):
         t = ts[index]
