@@ -14,70 +14,67 @@ Ambas bibliotecas podem ser instaladas com `sudo pip install matplotlib sympy`
 
 _Nota:_ A biblioteca matplotlib requer a instalação do pacote de GUI Tk. [Guia de Instalação do Tk](http://www.tkdocs.com/tutorial/install.html)
 
+## Uso:
+
+Para executar o programa basta colocar essa linha no seu terminal:
+
+`$ python main.py [input_file] <-v -p> <output_file>`
+
+Onde 
+
+* `-v` faz a apresentação dos valores no modo verboso (todos os ts de `t0` a `tf`)
+* `-p` faz a apresentação do gráfico de cada problema
+
 ## Especificação da entrada:
 
-A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, onde:
+A entrada deve ser dada na forma `metodo y0 y1 ... t0 h tf f <o>`, sem as aspas, onde:
 
-* `t0` é o valor de t do ponto incial
+* `metodo` é o código do método que deve ser utilizado
 
-* `y0` é o valor de y do ponto inicial
+| Método           | Código           |
+| ----------------:| ---------------- |
+| Euler Simples    | euler            |
+| Euler Inverso    | euler_inverso    |
+| Euler Aprimorado | euler_aprimorado |
+| Runge-Kutta      | runde_kutta      |
+| Adams-Bashforth  | adam_bashforth   |
+| Adams-Moulton    | adam_moulton     |
 
-* `f` é a função derivada de y(t) que deve ser dada na formatação de expressão da biblioteca `math`, ou seja, t² é escrito `t**2`
+_Obs.:_ No caso dos métodos de passos múltiplos pode ser especificado um método de passo simples para gerar os `o` primeiros pontos da seguinte forma:
+
+    `[metodo_de_passos_multiplos]_by_[metodo_de_passo_simples]`
+
+_Obs. 2:_ O método de Adams-Bashforth 1 é equivalente ao método de Euler Simples; o método de Adams-Moulton 1 é equivalente ao método de Euler Inverso; o método de Adams-Moulton 2 é equivalente ao método de Euler Composto.
+
+* `y0 y1 ...` é uma sequência de valores iniciais conhecidos de y (y(t0), y(t1), ...)
+
+* `t0` é o valor inicial de t
 
 * `h` é o tamanho do passo desejado
 
 * `tf` é o valor final que se deseja encontrar
 
-* `metodos` é uma lista de índices, separados por espaços, dos métodos numéricos que devem ser usados para encontrar y(tf). Os índices podem ser encontrados na tabela abaixo:
+* `f` é a função derivada de y(t) que deve ser dada na formatação de expressão da biblioteca `math`, ou seja, t² é escrito `t**2`
 
-| Indíce | Método                      |
-| ------:| --------------------------- |
-| 0      | Euler Simples               |
-| 1      | Euler Inverso               |
-| 2      | Euler Composto              |
-| 3      | Runge-Kutta                 |
-| 4      | Adams-Bashforth 1           |
-| 5      | Adams-Bashforth 2           |
-| 6      | Adams-Bashforth 3           |
-| 7      | Adams-Bashforth 4           |
-| 8      | Adams-Bashforth 5           |
-| 9      | Adams-Bashforth 6           |
-| 10     | Adams-Bashforth 7           |
-| 11     | Adams-Bashforth 8           |
-| 12     | Adams-Moulton 1             |
-| 13     | Adams-Moulton 2             |
-| 14     | Adams-Moulton 3             |
-| 15     | Adams-Moulton 4             |
-| 16     | Adams-Moulton 5             |
-| 17     | Adams-Moulton 6             |
-| 18     | Adams-Moulton 7             |
-| 19     | Adams-Moulton 8             |
-| 20     | Euler Inverso [Implícito]   |
-| 21     | Euler Composto [Implícito]  |
-| 22     | Adams-Moulton 3 [Implícito] |
-| 23     | Adams-Moulton 4 [Implícito] |
-| 24     | Adams-Moulton 5 [Implícito] |
-| 25     | Adams-Moulton 6 [Implícito] |
+_Obs.:_ Para dar valores de ponto flutuante na entrada usar a notação com ponto (.), ao invés de vírgula (,)
 
-_Nota:_ Para dar valores de ponto flutuante na entrada usar a notação com ponto (.), ao invés de vírgula (,)
-
-_Nota 2:_ O método de Adams-Bashforth 1 é equivalente ao método de Euler Simples; o método de Adams-Moulton 1 é equivalente ao método de Euler Inverso; o método de Adams-Moulton 2 é equivalente ao método de Euler Composto.
-
-_Nota 3:_ Nesse momento, apenas os métodos 0-9 e 12-17 estão implementados
+* `<o>` é a ordem do método no caso de métodos de passos múltiplos
 
 ### Exemplo de entrada:
 
 ```
-0, 1, 2*t+3*y, 0.1, 0.5, 0 1 2 3
+adam_bashforth 0.0 0.1 0.23 0.402 0.6328 0 0.1 20 1-t+4*y 5
 ```
 
 ```
-0, 1, cos(t)*y, 5, 20, 3 8 12
+euler 0 0 20 1-t+4*y
 ```
 
 ## Especificação da Saída:
 
-O código vai gerar duas saídas, a primeira são os resultados de y(tf) de acordo com cada um dos métodos usados, e a segunda é um gráfico da função encontrada por cada um dos métodos, de t0 até tf.
+O código pode gerar até duas saídas: o resultado de y(tf), e um gráfico dos pontos encontrados.
+
+_Obs.:_ Os pontos intermediários podem ser também apresentados 
 
 ### Exemplo de Saída:
 

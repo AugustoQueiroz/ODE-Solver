@@ -2,22 +2,21 @@
 import matplotlib.pyplot as plt
 
 class Plotter:
-    def print(self, method_name, results, should_print_all):
-        print()
+    def print(self, method_name, problem, verbose=True):
         print(method_name)
 
-        if should_print_all:
-            for i, t in enumerate(results[0]):
-                print("y(%.2f) = %.2f" % (t, results[1][i]))
+        if verbose:
+            for i, t in enumerate(problem.ts):
+                print("y(%.2f) = %.2f" % (t, problem.ys[i]))
         else:
-            t = results[0][-1]
-            print("y(%.2f) = %.2f" % (t, results[1][-1]))
+            t = problem.ts[-1]
+            print("y(%.2f) = %.2f" % (t, problem.ys[-1]))
 
-    def plot(self, method_name, results, should_print=True, all=False):
-        if should_print:
-            self.print(method_name, results, all)
+        print()
 
-        plt.plot(list(results[0]), list(results[1]), label=method_name)
+    def plot(self, method_name, problem):
+        plt.plot(problem.ts, problem.ys, label=method_name)
+        self.show(str(problem.f_expr))
 
     def show(self, y_prime):
         plt.title("y' = " + y_prime)

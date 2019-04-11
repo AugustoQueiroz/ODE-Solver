@@ -7,111 +7,122 @@ from functools import partial
 
 class Problem:
     def __init__(self, problem):
-        self.t0 = problem[0]
-        self.y0 = problem[1]
-        self.f_text = problem[2]
-        self.f_expr = problem[3]
-        self.h = problem[4]
-        self.tf = problem[5]
+        # Information about the method
+        self.method = problem[0]
+        self.auxiliary_method = problem[1]
+        self.order = problem[2]
+
+        # Information about the problem
+        self.ts = self.get_ts(problem[3])
+        self.h = problem[3][1]
+        self.ys = problem[4] + [0] * (len(self.ts) - len(problem[4])) # Complets the list of ys with 0s
+
+        # Information about the function
+        self.f_expr = problem[5]
+
+    def get_ts(self, t0_h_n_steps):
+        # Get the parameters from tuple
+        t = t0_h_n_steps[0]
+        h = t0_h_n_steps[1]
+        n_steps = t0_h_n_steps[2]
+
+        # Create the list of 
+        self.ts = []
+        while len(self.ts) <= n_steps:
+            self.ts.append(t)
+            t += h
+
+        return self.ts
+
+    def __str__(self):
+        problem_string = "Problem:\n"
+        problem_string += "\tMethod: " + self.method + " of " + str(self.order) + " order" + "\n"
+        problem_string += "\tAuxiliary Method: " + (self.auxiliary_method if self.auxiliary_method is not None else "None") + "\n"
+        problem_string += "\tTs: " + str(self.ts) + "\n"
+        problem_string += "\tYs: " + str(self.ys) + "\n"
+        problem_string += "\tf: " + str(self.f_expr) + "\n"
+        return problem_string
 
 class ODE_Solver:
-    def __init__(self):
+    def __init__(self, input_file=None, should_print=True, verbose=False, should_plot=False):
         # Definindo os símbolos t e y que serão usados nas funções de entrada
         self.t, self.y = sympy.symbols("t y")
 
         # Os métodos que podem ser resolvidos
         self.methods = methods.Methods()
 
+        # O modulo de apresentação dos resultados
         self.plotter = plotter.Plotter()
 
-    def solve(self, problem_definition):
-        # Método que resolve um problema passado como string
-        problem, required_methods = self.get_problem_from_definition(problem_definition)
-        
-        for method_index in required_methods:
-            self.plotter.plot(self.methods[method_index]["name"], self.solve_with_method(problem, method_index), all=True)
-
-        self.plotter.show(problem.f_text)
-
-    def create_ys(self, t0, tf, h):
-        # Função auxiliar que retorna uma lista com todos os passos de
-        # t0 até tf com tamanho de passo h
-        ts = []
-        t = t0
-
-        while t < tf + h:
-            ts.append(t)
-            t += h
-
-        ys = [0 for _ in ts]
-
-        return ts, ys
+        if input_file is not None:
+            with open(input_file) as input_data:
+                for problem_definition in input_data:
+                    problem = self.get_problem_from_definition(problem_definition)
+                    self.solve(problem, should_print=should_print, verbose=verbose, should_plot=should_plot)
 
     def get_problem_from_definition(self, definition):
         # Recebe uma string com o problema definido na formatação
         # t0, y0, f(t, y), h, tf, metodos
         # e retorna esses parametros separadamente, com a função já transformada
         # numa expressão de sympy
-        definition = definition.split(",")
+        definition = definition.strip("\n").split(" ")
 
-        t0 = float(definition[0])
-        y0 = float(definition[1])
-        f_text = definition[2]
-        h = float(definition[3])
-        tf = float(definition[4])
-        required_methods = [int(s) for s in definition[5].split(" ") if s != ""]
+        # Get the method wanted and the auxiliary method if needed
+        method_and_auxiliary = definition[0].split("_by_")
+        method = method_and_auxiliary[0]
+        auxiliary_method = method_and_auxiliary[1] if len(method_and_auxiliary) == 2 else None
 
-        # Convertendo a função para uma expressão de sympy que depois pode ser usada para criar uma função
-        f_expr = sympy.sympify(f_text)
+        # If method has an order, get it
+        order = 1
+        if method.startswith("adam"):
+            order = int(definition[-1])
 
-        return (Problem([t0, y0, f_text, f_expr, h, tf]), required_methods)
+        # Get the known ys
+        given_ys = order if auxiliary_method is None else 1 # The number of given ys: it's equals to the order of the function if there was no auxiliary given
+        if method.endswith("multon") and given_ys == order: given_ys -= 1         # Moulton receives one less y than it's order
+        ys = []
+        for value in definition[1:1+given_ys]:
+            ys.append(float(value))
 
-    def solve_with_method(self, problem, method_index):
-        # Função que recebe os parâmetros e mais um método
-        # então calcula o PVI usando o método de entrada
-        # Retorna tf e seu valor calculado, yf
-        y1 = problem.y0
-        t1 = problem.t0
+        # Get t0, h, and tf
+        t_index = 1+given_ys
+        t0 = float(definition[t_index])
+        h = float(definition[t_index+1])
+        n_steps = float(definition[t_index+2])
 
-        # Criação de uma lista com todos os ts e seus respectivos ys
-        # TODO: Talvez trocar duas listas por um dicionário y[ts] = ys
-        ts, ys = self.create_ys(problem.t0, problem.tf, problem.h)
-        ys[0] = problem.y0
+        # Get the function
+        f_index = t_index+3
+        f_text = definition[f_index]
+        f_expr = sympy.sympify(f_text) # Função convertida como uma expressão de sympy
+
+        return Problem([method, auxiliary_method, order, (t0, h, n_steps), ys, f_expr])
+
+    def solve(self, problem, should_print=False, verbose=False, should_plot=False):
         index = 0
 
-        # Inicialização da lista de resultados baseado nas necessidades do
-        # método escolhido
-        metodo = self.methods[method_index]["function"]
-        f = sympy.lambdify([self.t, self.y], problem.f_expr, "math") # Transformar a expressão da função em uma função executável
+        f = sympy.lambdify([self.t, self.y], problem.f_expr, "math") # Turn the function expression into an executable (python) function
 
-        if method_index >= 4 and method_index <= 11: # Running Adams-Bashforth
-            order = method_index - 3
-            metodo = partial(metodo, order)
+        if problem.auxiliary_method is not None:
+            # Use the auxiliary method to calculate the first n points
+            auxiliary_method_function = self.methods[problem.auxiliary_method]["function"]
+            while index < problem.order-1:
+                problem.ys[index+1] = auxiliary_method_function(problem.ts, problem.ys, index, f, problem.h)
+                index += 1
 
-            for i in range(0, order):
-                ys[i+1] = self.methods.runge_kutta(ts, ys, i, f, problem.h)
-                i += 1
-
-            index = order - 1
-        elif method_index >= 12 and method_index <= 19: ## Running Adams-Moulton
-            order = method_index - 11
-            metodo = partial(metodo, order)
-
-            for i in range(0, order):
-                ys[i+1] = self.methods.runge_kutta(ts, ys, i, f, problem.h)
-                i += 1
-
-            index = order - 1
-
-        # Para cada t calcular o próximo ponto
-        while index < len(ts)-1:
-            if  method_index < 20: ys[index+1] = metodo(ts, ys, index, f, problem.h)    # Explicit Methods
-            else: ys[index+1] = metodo(ts, ys, index, problem.f_expr, problem.h)        # Implicit Methods
-
+        index = problem.order-1
+        method = self.methods[problem.method]["function"]
+        if problem.method.startswith("adam"): method = partial(method, problem.order) # If the method needs an order, fill it in
+        while index < len(problem.ts)-1:
+            problem.ys[index+1] = method(problem.ts, problem.ys, index, f, problem.h)
             index += 1
 
-        return ts,ys
+        method_name = self.methods[problem.method]["name"] + (" of " + str(problem.order) + " order" if problem.method.startswith("adam") else "")
+        if should_print:
+            self.plotter.print(method_name, problem, verbose)
+        if should_plot:
+            self.plotter.plot(method_name, problem)
 
-# if "__name__" == "__main__":
-solver = ODE_Solver()
-solver.solve("0, 1, cos(t)*y, 0.1, 20, 2 21")
+        return problem.ys[-1]
+
+if __name__ == "__main__":
+    solver = ODE_Solver("input.txt")
