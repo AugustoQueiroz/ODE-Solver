@@ -28,6 +28,16 @@ class Methods:
             [5257.0/17280.0, 139849.0/120960.0, -4511.0/4480.0, 123133.0/120960.0, -88547.0/120960.0, 1537.0/4480.0, -11351.0/120960.0, 275.0/24192.0]  # Coeficients for order 8
         ]
 
+        self.inverse_formula_coeficients = [
+            [],
+            [1, 1],
+            [2.0/3.0, 4.0/3.0, -1.0/3.0],
+            [6.0/11.0, 18.0/11.0, -9.0/11.0, 2.0/11.0],
+            [12.0/25.0, 48.0/25.0, -36.0/25.0, 16.0/25.0, -3.0/25.0],
+            [60.0/137.0, 300.0/137.0, -300.0/137.0, 200.0/137, -75.0/137.0, 12.0/137.0],
+            [60.0/147.0, 360.0/147.0, -450.0/147.0, 400.0/147.0, -255.0/147.0, 72.0/147.0, 10.0/147.0]
+        ]
+
         self.methods = {
                 "euler" : {
                     "name": "Euler Simples",
@@ -64,6 +74,10 @@ class Methods:
                 "adam_moulton_implicito": {
                     "name": "Adams-Moulton [Implícito]",
                     "function": self.adams_moulton_implicit
+                    },
+                "formula_inversa": {
+                    "name": "Formula Inversa",
+                    "function": self.inverse_formula
                     }
                 }
 
@@ -128,7 +142,9 @@ class Methods:
         ys[index+1] = self.runge_kutta(ts, ys, index, f, h)
         fs = []
         for i in range(0, order):
-            fs.append(f(ts[index+1-i], ys[index+1-i]))
+            t = ts[index+1-i]
+            y = ys[index+1-i]
+            fs.append(f(t, y))
 
         coeficients = self.adams_moulton_coeficients[order]
         y = ys[index] + sum([c*f_i for c, f_i in zip(coeficients, fs)])*h
@@ -144,3 +160,15 @@ class Methods:
         f_side = (self.adams_moulton_coeficients[order][i]*f_i*h for i, f_i in enumerate(fs))
 
         return sympy.solve(sympy.Eq(ys[index] + f_side, y1), y1).pop()
+
+    def inverse_formula(self, order, ts, ys, index, f, h):
+        ys[index+1] = self.runge_kutta(ts, ys, index, f, h)
+
+        therms = []
+        therms.append(f(ts[index+1], ys[index+1])*h)
+        for i in range(order):
+            therms.append(ys[index-i])
+
+        coeficients = self.inverse_formula_coeficients[order]
+        y = sum([c*therm for c, therm in zip(coeficients, therms)])
+        return y

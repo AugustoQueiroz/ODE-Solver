@@ -74,12 +74,12 @@ class ODE_Solver:
 
         # If method has an order, get it
         order = 1
-        if method.startswith("adam"):
+        if method.startswith("adam") or method.startswith("formula"):
             order = int(definition[-1])
 
         # Get the known ys
         given_ys = order if auxiliary_method is None else 1 # The number of given ys: it's equals to the order of the function if there was no auxiliary given
-        if method.endswith("multon") and given_ys == order: given_ys -= 1         # Moulton receives one less y than it's order
+        if (method.endswith("multon") or method.startswith("formula")) and given_ys == order: given_ys -= 1         # Moulton receives one less y than it's order
         ys = []
         for value in definition[1:1+given_ys]:
             ys.append(float(value))
@@ -105,13 +105,13 @@ class ODE_Solver:
         if problem.auxiliary_method is not None:
             # Use the auxiliary method to calculate the first n points
             auxiliary_method_function = self.methods[problem.auxiliary_method]["function"]
-            while index < problem.order-1:
+            while index < problem.order:
                 problem.ys[index+1] = auxiliary_method_function(problem.ts, problem.ys, index, f, problem.h)
                 index += 1
 
         index = problem.order-1
         method = self.methods[problem.method]["function"]
-        if problem.method.startswith("adam"): method = partial(method, problem.order) # If the method needs an order, fill it in
+        if problem.method.startswith("adam") or problem.method == "formula_inversa": method = partial(method, problem.order) # If the method needs an order, fill it in
         while index < len(problem.ts)-1:
             problem.ys[index+1] = method(problem.ts, problem.ys, index, f, problem.h)
             index += 1
