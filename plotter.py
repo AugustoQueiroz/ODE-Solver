@@ -7,17 +7,17 @@ class Plotter:
         print(method_name)
 
         if should_print_all:
-            for t in results.keys():
-                print("y(%.2f) = %.2f" % (t, results[t]))
+            for i, t in enumerate(results[0]):
+                print("y(%.2f) = %.2f" % (t, results[1][i]))
         else:
-            t = list(results.keys())[-1]
-            print("y(%.2f) = %.2f" % (t, results[t]))
+            t = results[0][-1]
+            print("y(%.2f) = %.2f" % (t, results[1][-1]))
 
     def plot(self, method_name, results, should_print=True, all=False):
         if should_print:
             self.print(method_name, results, all)
 
-        plt.plot(list(results.keys()), list(results.values()), label=method_name)
+        plt.plot(list(results[0]), list(results[1]), label=method_name)
 
     def show(self, y_prime):
         plt.title("y' = " + y_prime)

@@ -3,6 +3,7 @@ import math
 import sympy
 import methods 
 import plotter
+from functools import partial
 
 class Problem:
     def __init__(self, problem):
@@ -28,21 +29,23 @@ class ODE_Solver:
         problem, required_methods = self.get_problem_from_definition(problem_definition)
         
         for method_index in required_methods:
-            self.plotter.plot(self.methods[method_index]["name"], self.solve_with_method(problem, method_index))
+            self.plotter.plot(self.methods[method_index]["name"], self.solve_with_method(problem, method_index), all=True)
 
         self.plotter.show(problem.f_text)
 
     def create_ys(self, t0, tf, h):
         # Função auxiliar que retorna uma lista com todos os passos de
         # t0 até tf com tamanho de passo h
-        ys = {}
+        ts = []
         t = t0
 
         while t <= tf:
-            ys[t] = 0
+            ts.append(t)
             t += h
 
-        return ys
+        ys = [0 for _ in ts]
+
+        return ts, ys
 
     def get_problem_from_definition(self, definition):
         # Recebe uma string com o problema definido na formatação
@@ -67,30 +70,39 @@ class ODE_Solver:
         # Função que recebe os parâmetros e mais um método
         # então calcula o PVI usando o método de entrada
         # Retorna tf e seu valor calculado, yf
-        metodo = self.methods[method_index]["function"]
-        f = sympy.lambdify([self.t, self.y], problem.f_expr, "math") # Transformar a expressão da função em uma função executável
-
         y1 = problem.y0
         t1 = problem.t0
 
         # Criação de uma lista com todos os ts e seus respectivos ys
         # TODO: Talvez trocar duas listas por um dicionário y[ts] = ys
-        ys = self.create_ys(problem.t0, problem.tf, problem.h)
-        ys[problem.t0] = problem.y0
-        t = problem.t0
+        ts, ys = self.create_ys(problem.t0, problem.tf, problem.h)
+        ys[0] = problem.y0
+        index = 0
 
         # Inicialização da lista de resultados baseado nas necessidades do
         # método escolhido
+        metodo = self.methods[method_index]["function"]
+        f = sympy.lambdify([self.t, self.y], problem.f_expr, "math") # Transformar a expressão da função em uma função executável
+
+        if method_index >= 4 and method_index <= 11: # Running an Adams-Bashforth
+            order = method_index - 3
+            metodo = partial(metodo, order)
+
+            for i in range(0, order):
+                ys[i+1] = self.methods.runge_kutta(ts, ys, i, f, problem.h)
+                i += 1
+
+            index = order - 1
 
         # Para cada t calcular o próximo ponto
-        while t <= problem.tf:
-            if  method_index <= 13: ys[t+problem.h] = metodo(t, ys, f, problem.h)
-            else: ys[t+problem.h] = metodo(t, ys, f_expr, problem.h)
+        while index < len(ts)-1:
+            if  method_index <= 13: ys[index+1] = metodo(ts, ys, index, f, problem.h)
+            else: ys[index+1] = metodo(t, ys, index, f_expr, problem.h)
 
-            t += problem.h
+            index += 1
 
-        return ys
+        return ts,ys
 
-if "__name__" == "__main__":
-    solver = ODE_Solver()
-    solver.solve("0, 1, cos(t)*y, 0.1, 20, 0 1")
+# if "__name__" == "__main__":
+solver = ODE_Solver()
+solver.solve("0, 1, cos(t)*y, 0.1, 20, 0 4")

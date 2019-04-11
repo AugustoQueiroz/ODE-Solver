@@ -28,7 +28,7 @@ A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, on
 
 * `tf` é o valor final que se deseja encontrar
 
-* `metodos` é uma lista de índices, separados por espaços, dos métodos numéricos que devem ser usados para encontrar y(tf). Os índices podem ser encontrados na tabela abaixo
+* `metodos` é uma lista de índices, separados por espaços, dos métodos numéricos que devem ser usados para encontrar y(tf). Os índices podem ser encontrados na tabela abaixo:
 
 | Indíce | Método                      |
 | ------:| --------------------------- |
@@ -36,26 +36,34 @@ A entrada deve ser dada na forma `"t0, y0, f, h, tf, metodos"`, sem as aspas, on
 | 1      | Euler Inverso               |
 | 2      | Euler Composto              |
 | 3      | Runge-Kutta                 |
-| 4      | Adams-Bashforth 2           |
-| 5      | Adams-Bashforth 3           |
-| 6      | Adams-Bashforth 4           |
-| 7      | Adams-Bashforth 5           |
-| 8      | Adams-Bashforth 6           |
-| 9      | Adams-Moulton 2             |
-| 10     | Adams-Moulton 3             |
-| 11     | Adams-Moulton 4             |
-| 12     | Adams-Moulton 5             |
-| 13     | Adams-Moulton 6             |
-| 14     | Euler Inverso [Implícito]   |
-| 15     | Euler Composto [Implícito]  |
-| 16     | Adams-Moulton 3 [Implícito] |
-| 17     | Adams-Moulton 4 [Implícito] |
-| 18     | Adams-Moulton 5 [Implícito] |
-| 19     | Adams-Moulton 6 [Implícito] |
+| 4      | Adams-Bashforth 1           |
+| 5      | Adams-Bashforth 2           |
+| 6      | Adams-Bashforth 3           |
+| 7      | Adams-Bashforth 4           |
+| 8      | Adams-Bashforth 5           |
+| 9      | Adams-Bashforth 6           |
+| 10     | Adams-Bashforth 7           |
+| 11     | Adams-Bashforth 8           |
+| 12     | Adams-Moulton 1             |
+| 13     | Adams-Moulton 2             |
+| 14     | Adams-Moulton 3             |
+| 15     | Adams-Moulton 4             |
+| 16     | Adams-Moulton 5             |
+| 17     | Adams-Moulton 6             |
+| 18     | Adams-Moulton 7             |
+| 19     | Adams-Moulton 8             |
+| 20     | Euler Inverso [Implícito]   |
+| 21     | Euler Composto [Implícito]  |
+| 22     | Adams-Moulton 3 [Implícito] |
+| 23     | Adams-Moulton 4 [Implícito] |
+| 24     | Adams-Moulton 5 [Implícito] |
+| 25     | Adams-Moulton 6 [Implícito] |
 
 _Nota:_ Para dar valores de ponto flutuante na entrada usar a notação com ponto (.), ao invés de vírgula (,)
 
 _Nota 2:_ O método de Adams-Bashforth 1 é equivalente ao método de Euler Simples; o método de Adams-Moulton 1 é equivalente ao método de Euler Inverso; o método de Adams-Moulton 2 é equivalente ao método de Euler Composto.
+
+_Nota 3:_ Nesse momento, apenas os métodos 0-9 estão implementados
 
 ### Exemplo de entrada:
 

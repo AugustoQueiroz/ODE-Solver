@@ -4,7 +4,18 @@ import sympy
 
 class Methods:
     def __init__(self):
-        self.methods= [
+        self.adams_bashforth_coeficients = [
+            [],                                                                                                     # Coeficients for order 0
+            [1],                                                                                                    # Coeficients for order 1
+            [3.0/2.0, -1.0/2.0],                                                                                    # Coeficients for order 2
+            [23.0/12.0, -16.0/12.0, 5.0/12.0],                                                                      # Coeficients for order 3
+            [55.0/24.0, -59.0/24.0, 37.0/24.0, -3.0/24.0],                                                          # Coeficients for order 4
+            [1901.0/720.0, -2774.0/720.0, 2616.0/720.0, -1274.0/720.0, 251.0/720.0],                                # Coeficients for order 5
+            [4277.0/1440.0, -3*2641.0/1440.0, 2*4991.0/1440.0, -2*3649.0/1440.0, 3*959.0/1440.0, -5*95.0/1440.0]    # Coeficients for order 6
+            [],                                                                                                     # Coeficients for order 7
+            [],                                                                                                     # Coeficients for order 8
+        ]
+        self.methods = [
                 {
                     "name": "Euler Simples",
                     "function": self.euler
@@ -21,29 +32,51 @@ class Methods:
                     "name": "Runge-Kutta",
                     "function": self.runge_kutta
                     },
+                {
+                    "name": "Adams-Bashforth",
+                    "function": self.adams_bashforth
+                    }
                 ]
 
     def __getitem__(self, key):
+        if key >= 5 and key <= 9:
+            key = 4
         return self.methods[key]
 
-    def euler(self, t, ys, f, h):
-        y = ys[t]
+    def euler(self, ts, ys, index, f, h):
+        t = ts[index]
+        y = ys[index]
         return y + f(t, y)*h
 
-    def inverse_euler(self, t, ys, f, h):
-        y = ys[t]
-        y1 = self.euler(t, ys, f, h)
+    def inverse_euler(self, ts, ys, index, f, h):
+        t = ts[index]
+        y = ys[index]
+        y1 = self.euler(ts, ys, index, f, h)
         return y + f(t + h, y1)*h
 
-    def composite_euler(self, t, ys, f, h):
-        y = ys[t]
-        y1 = self.euler(t, ys, f, h)
+    def composite_euler(self, ts, ys, index, f, h):
+        t = ts[index]
+        y = ys[index]
+        y1 = self.euler(ts, ys, index, f, h)
         return y + (f(t, y) + f(t+h, y1))*h/2
 
-    def runge_kutta(self, t, ys, f, h):
-        y = ys[t]
+    def runge_kutta(self, ts, ys, index, f, h):
+        t = ts[index]
+        y = ys[index]
         k1 = f(t, y)
         k2 = f(t + h/2, y + k1*h/2)
         k3 = f(t + h/2, y + k2*h/2)
         k4 = f(t + h, y + h*k3)
         return y + (k1 + 2*k2 + 2*k3 + k4)*h/6
+
+    def adams_bashforth(self, order, ts, ys, index, f, h):
+        fs = []
+        for i in range(0, order):
+            t = ts[index - i]
+            y = ys[index - i]
+            fs.append(f(t, y))
+
+        y = ys[index]
+        for i, f_i in enumerate(fs):
+            y += h*f_i*self.adams_bashforth_coeficients[order][i]
+        return y
