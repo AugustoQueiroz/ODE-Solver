@@ -63,7 +63,7 @@ _Nota:_ Para dar valores de ponto flutuante na entrada usar a notação com pont
 
 _Nota 2:_ O método de Adams-Bashforth 1 é equivalente ao método de Euler Simples; o método de Adams-Moulton 1 é equivalente ao método de Euler Inverso; o método de Adams-Moulton 2 é equivalente ao método de Euler Composto.
 
-_Nota 3:_ Nesse momento, apenas os métodos 0-9 estão implementados
+_Nota 3:_ Nesse momento, apenas os métodos 0-9 e 12-17 estão implementados
 
 ### Exemplo de entrada:
 

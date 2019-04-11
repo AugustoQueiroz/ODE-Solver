@@ -84,8 +84,17 @@ class ODE_Solver:
         metodo = self.methods[method_index]["function"]
         f = sympy.lambdify([self.t, self.y], problem.f_expr, "math") # Transformar a expressão da função em uma função executável
 
-        if method_index >= 4 and method_index <= 11: # Running an Adams-Bashforth
+        if method_index >= 4 and method_index <= 11: # Running Adams-Bashforth
             order = method_index - 3
+            metodo = partial(metodo, order)
+
+            for i in range(0, order):
+                ys[i+1] = self.methods.runge_kutta(ts, ys, i, f, problem.h)
+                i += 1
+
+            index = order - 1
+        elif method_index >= 12 and method_index <= 19: ## Running Adams-Moulton
+            order = method_index - 11
             metodo = partial(metodo, order)
 
             for i in range(0, order):
@@ -96,8 +105,8 @@ class ODE_Solver:
 
         # Para cada t calcular o próximo ponto
         while index < len(ts)-1:
-            if  method_index <= 13: ys[index+1] = metodo(ts, ys, index, f, problem.h)
-            else: ys[index+1] = metodo(t, ys, index, f_expr, problem.h)
+            if  method_index <= 20: ys[index+1] = metodo(ts, ys, index, f, problem.h)   # Explicit Methods
+            else: ys[index+1] = metodo(ts, ys, index, problem.f_expr, problem.h)        # Implicit Methods
 
             index += 1
 
@@ -105,4 +114,4 @@ class ODE_Solver:
 
 # if "__name__" == "__main__":
 solver = ODE_Solver()
-solver.solve("0, 1, cos(t)*y, 0.1, 20, 0 4")
+solver.solve("0, 1, cos(t)*y, 0.1, 20, 2 13")
