@@ -1,5 +1,6 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
+
 
 class Plotter:
     def print(self, problem, verbose=True):
