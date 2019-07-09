@@ -3,4 +3,4 @@ euler_inverso 16667 0 0.1 200 y*0.1*ln(3)
 euler_aprimorado 16667 0 0.1 200 y*0.1*ln(3)
 runge_kutta 16667 0 0.1 200 y*0.1*ln(3)
 adam_bashforth_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 5
-adam_moulton_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 5
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 5

@@ -24,4 +24,13 @@ class Plotter:
         plt.xlabel("t")
         plt.ylabel("y")
         plt.legend()
+        # plt.xlim(xmin=18)
+        # plt.ylim(xmin=)
+        # fig_size = plt.rcParams["figure.figsize"]
+        # fig_size[0] = 50
+        # fig_size[1] = 50
+        # plt.figure()
+        # plt.rcParams["figure.figsize"] = fig_size
+        # # Prints: [8.0, 6.0]
+        # print("Current size:", fig_size)
         plt.show()

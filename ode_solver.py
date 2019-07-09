@@ -81,17 +81,18 @@ class ODE_Solver:
 
         # O modulo de apresentação dos resultados
         self.plotter = plotter.Plotter()
-
+        ys = {}
         if input_file is not None:
             with open(input_file) as input_data:
                 for problem_definition in input_data:
                     problem = self.get_problem_from_definition(problem_definition)
-                    self.solve(
+                    ys[problem.method_name] = self.solve(
                         problem,
                         should_print=should_print,
                         verbose=verbose,
                         should_plot=should_plot,
                     )
+        return ys
 
     def get_problem_from_definition(self, definition):
         # Recebe uma string com o problema definido na formatação
@@ -173,7 +174,7 @@ class ODE_Solver:
         if should_plot:
             self.plotter.plot(problem)
 
-        return problem.ys[-1]
+        return problem.ys
 
 
 if __name__ == "__main__":
