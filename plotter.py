@@ -17,7 +17,7 @@ class Plotter:
 
     def plot(self, problem):
         plt.plot(problem.ts, problem.ys, label=problem.method_name())
-        self.show(str(problem.f_expr))
+        # self.show(str(problem.f_expr))
 
     def show(self, y_prime):
         plt.title("y' = " + y_prime)
