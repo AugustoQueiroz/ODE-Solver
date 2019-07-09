@@ -20,7 +20,7 @@ class Plotter:
         # self.show(str(problem.f_expr))
 
     def show(self, y_prime):
-        plt.title("y' = " + y_prime)
+        # plt.title("y' = " + y_prime)
         plt.xlabel("t")
         plt.ylabel("y")
         plt.legend()
