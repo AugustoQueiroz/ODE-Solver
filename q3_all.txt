@@ -1,0 +1,16 @@
+adam_bashforth_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 2
+adam_bashforth_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 3
+adam_bashforth_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 4
+adam_bashforth_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 5
+adam_bashforth_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 6
+adam_bashforth_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 7
+adam_multon_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 2
+adam_multon_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 3
+adam_multon_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 4
+adam_multon_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 5
+adam_multon_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 6
+adam_multon_by_runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70) 7
+euler 300 0 0.1 210 1/3*ln(13/23)*(y-70)
+euler_inverso 300 0 0.1 210 1/3*ln(13/23)*(y-70)
+euler_aprimorado 300 0 0.1 210 1/3*ln(13/23)*(y-70)
+runge_kutta 300 0 0.1 210 1/3*ln(13/23)*(y-70)

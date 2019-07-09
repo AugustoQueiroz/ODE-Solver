@@ -1,0 +1,7 @@
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 2
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 3
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 4
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 5
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 6
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 7
+adam_multon_by_runge_kutta 16667 0 0.1 200 y*0.1*ln(3) 8

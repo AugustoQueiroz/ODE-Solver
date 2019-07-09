@@ -1,0 +1,16 @@
+adam_bashforth_by_runge_kutta 50 0 0.1 100 6-y/100 2
+adam_bashforth_by_runge_kutta 50 0 0.1 100 6-y/100 3
+adam_bashforth_by_runge_kutta 50 0 0.1 100 6-y/100 4
+adam_bashforth_by_runge_kutta 50 0 0.1 100 6-y/100 5
+adam_bashforth_by_runge_kutta 50 0 0.1 100 6-y/100 6
+adam_bashforth_by_runge_kutta 50 0 0.1 100 6-y/100 7
+adam_multon_by_runge_kutta 50 0 0.1 100 6-y/100 2
+adam_multon_by_runge_kutta 50 0 0.1 100 6-y/100 3
+adam_multon_by_runge_kutta 50 0 0.1 100 6-y/100 4
+adam_multon_by_runge_kutta 50 0 0.1 100 6-y/100 5
+adam_multon_by_runge_kutta 50 0 0.1 100 6-y/100 6
+adam_multon_by_runge_kutta 50 0 0.1 100 6-y/100 7
+euler 50 0 0.1 100 6-y/100
+euler_inverso 50 0 0.1 100 6-y/100
+euler_aprimorado 50 0 0.1 100 6-y/100
+runge_kutta 50 0 0.1 100 6-y/100
