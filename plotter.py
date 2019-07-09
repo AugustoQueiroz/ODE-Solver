@@ -16,13 +16,20 @@ class Plotter:
         print()
 
     def plot(self, problem):
-        plt.plot(problem.ts, problem.ys, label=problem.method_name())
+        plt.plot(
+            problem.ts,
+            problem.ys,
+            label=problem.method_name(),
+            linestyle="--",
+            marker="o",
+            markevery=25,
+        )
         # self.show(str(problem.f_expr))
 
     def show(self, y_prime):
         # plt.title("y' = " + y_prime)
-        plt.xlabel("t")
-        plt.ylabel("y")
+        plt.xlabel("tempo")
+        plt.ylabel("corrente")
         plt.legend()
         # plt.xlim(xmin=18)
         # plt.ylim(xmin=)
